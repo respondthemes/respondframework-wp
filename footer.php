@@ -43,22 +43,9 @@
   }
   </script>
 
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/gumby.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.retina.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.fixed.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.skiplink.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.toggleswitch.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.checkbox.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.radiobtn.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.tabs.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.navbar.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/gumby.fittext.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/ui/jquery.validation.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/gumby.init.js"></script>
 
   <script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/gumby.min.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/plugins.js"></script>
-  <script src="<?php bloginfo( 'template_directory' ); ?>/js/main.js"></script>
+
 
   <!-- Change UA-XXXXX-X to be your site's ID -->
   <!--<script>

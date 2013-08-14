@@ -1,9 +1,204 @@
 <?php
-/**
- * _s functions and definitions
- *
- * @package _s
- */
+function global_gumby_styles() {
+	wp_register_style( 'gumby_styles', get_template_directory_uri() . '/css/gumby.css');
+	wp_enqueue_style( 'gumby_styles' );
+}
+add_action ( 'wp_enqueue_scripts', 'global_gumby_styles' );
+
+/** Loads Gumby Javascript **/
+function global_gumby_js() {
+	wp_register_script( 
+		'gumby_js', 
+		get_template_directory_uri() . '/js/libs/gumby.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js' );
+
+/** Loads Gumby Retina **/
+function global_gumby_js_retina() {
+	wp_register_script( 
+		'gumby_js_retina', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.retina.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_retina' );
+
+/** Loads Gumby Fixed **/
+function global_gumby_js_fixed() {
+	wp_register_script( 
+		'gumby_js_fixed', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.fixed.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_fixed' );
+
+/** Loads Gumby Skiplink **/
+function global_gumby_js_skiplink() {
+	wp_register_script( 
+		'gumby_js_skiplink', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.skiplink.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_skiplink' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_skiplink' );
+
+/** Loads Gumby Toggleswitch **/
+function global_gumby_js_toggleswitch() {
+	wp_register_script( 
+		'gumby_js_toggleswitch', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.toggleswitch.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_toggleswtich' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_toggleswitch' );
+
+/** Loads Gumby Checkbox **/
+function global_gumby_js_checkbox() {
+	wp_register_script( 
+		'gumby_js_checkbox', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.checkbox.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_checkbox' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_checkbox' );
+
+/** Loads Radiobtn **/
+function global_gumby_js_radiobtn() {
+	wp_register_script( 
+		'gumby_js_radiobtn', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.radiobtn.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_radiobtn' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_radiobtn' );
+
+/** Loads Gumby Tabs **/
+function global_gumby_js_tabs() {
+	wp_register_script( 
+		'gumby_js_tabs', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.tabs.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_tabs' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_tabs' );
+
+/** Loads Gumby navbar **/
+function global_gumby_js_navbar() {
+	wp_register_script( 
+		'gumby_js_navbar', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.navbar.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_navbar' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_navbar' );
+
+/** Loads Gumby fittext **/
+function global_gumby_js_fittext() {
+	wp_register_script( 
+		'gumby_js_fittext', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.fittext.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_fittext' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_fittext' );
+
+/** Loads Gumby jQuery validation **/
+function global_gumby_js_jquery_validation() {
+	wp_register_script( 
+		'gumby_js_jquery_validation', 
+		get_template_directory_uri() . '/js/libs/ui/gumby.jquery.validation.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_jquery_validation' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_jquery_validation' );
+
+/** Loads Gumby init **/
+function global_gumby_js_gumby_init() {
+	wp_register_script( 
+		'gumby_js_gumby_init', 
+		get_template_directory_uri() . '/js/libs/gumby.init.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_js_gumby_init' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_js_gumby_init' );
+
+/** Loads Gumby min **/
+function global_gumby_min() {
+	wp_register_script(
+		'gumby_min',
+		get_template_directory_uri() . '/js/libs/gumby.min.js',
+		array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_min' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_min' );
+
+/** Loads Gumby plugins **/
+function global_gumby_plugins() {
+	wp_register_script(
+		'gumby_plugins',
+		get_template_directory_uri() . '/js/plugins.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_plugins' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_plugins' );
+
+/** Loads gumby main **/
+function global_gumby_main() {
+	wp_register_script(
+		'gumby_main',
+		get_template_directory_uri() . '/js/main.js',
+		array( 'jquery' ),
+		false,
+		true
+	);
+	wp_enqueue_script( 'gumby_main' );
+}
+add_action( 'wp_enqueue_scripts', 'global_gumby_main' );
 
 /**
  * Set the content width based on the theme's design and stylesheet.

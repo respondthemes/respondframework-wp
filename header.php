@@ -21,8 +21,7 @@
 <title><?php wp_title( '|', true, 'right' ); ?></title>
 <link rel="profile" href="http://gmpg.org/xfn/11" />
 <link rel="pingback" href="<?php bloginfo( 'pingback_url' ); ?>" />
-<link rel="stylesheet" href="<?php bloginfo( 'template_directory' ); ?>/css/gumby.css">
-<script src="<?php bloginfo( 'template_directory' ); ?>/js/libs/modernizr-2.6.2.min.js"></script>
+
 <?php wp_head(); ?>
 </head>
 
