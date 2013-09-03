@@ -295,7 +295,12 @@ function gumby() {
 }
 add_action( 'wp_enqueue_scripts', 'gumby' );
 
-
+//Initialize the update checker.
+require 'theme-updates/theme-update-checker.php';
+$example_update_checker = new ThemeUpdateChecker(
+	'respondframework',                                            //Theme folder name, AKA "slug". 
+	'http://localhost/wordpress/htdocs/wp-content/themes/respondframework/theme-updates/info.json' //URL of the metadata file.
+);
 
 /**
  * Set the content width based on the theme's design and stylesheet.
