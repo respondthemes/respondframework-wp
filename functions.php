@@ -272,25 +272,25 @@ function global_gumby_styles() {
 	$file_dir = get_bloginfo( 'template_directory' );
 	wp_enqueue_style( "gumby_styles", $file_dir . "/css/gumby.css", false, "1.0", "all" );
 }
-add_action ( 'wp_enqueue_scripts', 'global_gumby_styles' );
+add_action ( 'wp_enqueue_styles', 'global_gumby_styles' );
 
 /** Loads Gumby Javascript **/
 function gumby() {
 	$file_dir = get_bloginfo( 'template_directory' );
 	wp_enqueue_script( "gumby_js", $file_dir . "/js/libs/gumby.js", array( 'jquery' ), false, true );
 	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.retina.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.fixed.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.skiplink.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.checkbox.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.radiobtn.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.tabs.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.navbar.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.fittext.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.jquery.validation.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/gumby.init.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/gumby.min.js", array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/plugins.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/main.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_fixed", $file_dir . "/js/libs/ui/gumby.fixed.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_skiplink", $file_dir . "/js/libs/ui/gumby.skiplink.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_checkbox", $file_dir . "/js/libs/ui/gumby.checkbox.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_radiobtn", $file_dir . "/js/libs/ui/gumby.radiobtn.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_tabs", $file_dir . "/js/libs/ui/gumby.tabs.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_navbar", $file_dir . "/js/libs/ui/gumby.navbar.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_fittext", $file_dir . "/js/libs/ui/gumby.fittext.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_validation", $file_dir . "/js/libs/ui/gumby.jquery.validation.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_init", $file_dir . "/js/libs/gumby.init.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_min", $file_dir . "/js/libs/gumby.min.js", array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ), false, true );
+	wp_enqueue_script( "gumby_js_plugins", $file_dir . "/js/plugins.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_main", $file_dir . "/js/main.js", array( 'jquery' ), false, true );
 	
 }
 add_action( 'wp_enqueue_scripts', 'gumby' );
