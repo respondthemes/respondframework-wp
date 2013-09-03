@@ -1,204 +1,301 @@
 <?php
+// Theme Options Panel
+$themename = "RespondThemes";
+$shortname = "rt";
+
+$categories = get_categories('hide_empty=0&orderby=name');
+$wp_cats = array();
+foreach ($categories as $category_list ) {
+       $wp_cats[$category_list->cat_ID] = $category_list->cat_name;
+}
+array_unshift($wp_cats, "Choose a category"); 
+
+$options = array (
+ 
+array( "name" => $themename." Options",
+	"type" => "title"),
+ 
+
+array( "name" => "General",
+	"type" => "section"),
+array( "type" => "open"),
+ 
+array( "name" => "Colour Scheme",
+	"desc" => "Select the colour scheme for the theme",
+	"id" => $shortname."_color_scheme",
+	"type" => "select",
+	"options" => array("blue", "red", "green"),
+	"std" => "blue"),
+	
+array( "name" => "Logo URL",
+	"desc" => "Enter the link to your logo image",
+	"id" => $shortname."_logo",
+	"type" => "text",
+	"std" => ""),
+	
+	
+array( "name" => "Custom CSS",
+	"desc" => "Want to add any custom CSS code? Put in here, and the rest is taken care of. This overrides any other stylesheets. eg: a.button{color:green}",
+	"id" => $shortname."_custom_css",
+	"type" => "textarea",
+	"std" => ""),		
+	
+array( "type" => "close"),
+array( "name" => "Homepage",
+	"type" => "section"),
+array( "type" => "open"),
+
+array( "name" => "Homepage header image",
+	"desc" => "Enter the link to an image used for the homepage header.",
+	"id" => $shortname."_header_img",
+	"type" => "text",
+	"std" => ""),
+	
+array( "name" => "Homepage featured category",
+	"desc" => "Choose a category from which featured posts are drawn",
+	"id" => $shortname."_feat_cat",
+	"type" => "select",
+	"options" => $wp_cats,
+	"std" => "Choose a category"),
+	
+
+array( "type" => "close"),
+array( "name" => "Footer",
+	"type" => "section"),
+array( "type" => "open"),
+	
+array( "name" => "Footer copyright text",
+	"desc" => "Enter text used in the right side of the footer. It can be HTML",
+	"id" => $shortname."_footer_text",
+	"type" => "text",
+	"std" => ""),
+	
+array( "name" => "Google Analytics Code",
+	"desc" => "You can paste your Google Analytics or other tracking code in this box. This will be automatically added to the footer.",
+	"id" => $shortname."_ga_code",
+	"type" => "textarea",
+	"std" => ""),	
+	
+array( "name" => "Custom Favicon",
+	"desc" => "A favicon is a 16x16 pixel icon that represents your site; paste the URL to a .ico image that you want to use as the image",
+	"id" => $shortname."_favicon",
+	"type" => "text",
+	"std" => get_bloginfo('url') ."/favicon.ico"),	
+	
+array( "name" => "Feedburner URL",
+	"desc" => "Feedburner is a Google service that takes care of your RSS feed. Paste your Feedburner URL here to let readers see it in your website",
+	"id" => $shortname."_feedburner",
+	"type" => "text",
+	"std" => get_bloginfo('rss2_url')),
+
+ 
+array( "type" => "close")
+ 
+);
+
+
+function mytheme_add_admin() {
+ 
+global $themename, $shortname, $options;
+ 
+if ( $_GET['page'] == basename(__FILE__) ) {
+ 
+	if ( 'save' == $_REQUEST['action'] ) {
+ 
+		foreach ($options as $value) {
+		update_option( $value['id'], $_REQUEST[ $value['id'] ] ); }
+ 
+foreach ($options as $value) {
+	if( isset( $_REQUEST[ $value['id'] ] ) ) { update_option( $value['id'], $_REQUEST[ $value['id'] ]  ); } else { delete_option( $value['id'] ); } }
+ 
+	header("Location: admin.php?page=functions.php&saved=true");
+die;
+ 
+} 
+else if( 'reset' == $_REQUEST['action'] ) {
+ 
+	foreach ($options as $value) {
+		delete_option( $value['id'] ); }
+ 
+	header("Location: admin.php?page=functions.php&reset=true");
+die;
+ 
+}
+}
+ 
+add_menu_page($themename, $themename, 'administrator', basename(__FILE__), 'mytheme_admin');
+}
+
+function mytheme_add_init() {
+
+$file_dir=get_bloginfo('template_directory');
+wp_enqueue_style("functions", $file_dir."/functions/functions.css", false, "1.0", "all");
+wp_enqueue_script("rm_script", $file_dir."/functions/rm_script.js", false, "1.0");
+
+}
+
+function mytheme_admin() {
+ 
+global $themename, $shortname, $options;
+$i=0;
+ 
+if ( $_REQUEST['saved'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings saved.</strong></p></div>';
+if ( $_REQUEST['reset'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings reset.</strong></p></div>';
+ 
+?>
+<div class="wrap rm_wrap">
+<h2><?php echo $themename; ?> Settings</h2>
+ 
+<div class="rm_opts">
+<form method="post">
+<?php foreach ($options as $value) {
+switch ( $value['type'] ) {
+ 
+case "open":
+?>
+ 
+<?php break;
+ 
+case "close":
+?>
+ 
+</div>
+</div>
+<br />
+
+ 
+<?php break;
+ 
+case "title":
+?>
+<p>To easily use the <?php echo $themename;?> theme, you can use the menu below.</p>
+
+ 
+<?php break;
+ 
+case 'text':
+?>
+
+<div class="rm_input rm_text">
+	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+ 	<input name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" value="<?php if ( get_settings( $value['id'] ) != "") { echo stripslashes(get_settings( $value['id'])  ); } else { echo $value['std']; } ?>" />
+ <small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
+ 
+ </div>
+<?php
+break;
+ 
+case 'textarea':
+?>
+
+<div class="rm_input rm_textarea">
+	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+ 	<textarea name="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" cols="" rows=""><?php if ( get_settings( $value['id'] ) != "") { echo stripslashes(get_settings( $value['id']) ); } else { echo $value['std']; } ?></textarea>
+ <small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
+ 
+ </div>
+  
+<?php
+break;
+ 
+case 'select':
+?>
+
+<div class="rm_input rm_select">
+	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+	
+<select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>">
+<?php foreach ($value['options'] as $option) { ?>
+		<option <?php if (get_settings( $value['id'] ) == $option) { echo 'selected="selected"'; } ?>><?php echo $option; ?></option><?php } ?>
+</select>
+
+	<small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
+</div>
+<?php
+break;
+ 
+case "checkbox":
+?>
+
+<div class="rm_input rm_checkbox">
+	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
+	
+<?php if(get_option($value['id'])){ $checked = "checked=\"checked\""; }else{ $checked = "";} ?>
+<input type="checkbox" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" value="true" <?php echo $checked; ?> />
+
+
+	<small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
+ </div>
+<?php break; 
+case "section":
+
+$i++;
+
+?>
+
+<div class="rm_section">
+<div class="rm_title"><h3><img src="<?php bloginfo('template_directory')?>/functions/images/trans.gif" class="inactive" alt="""><?php echo $value['name']; ?></h3><span class="submit"><input name="save<?php echo $i; ?>" type="submit" value="Save changes" />
+</span><div class="clearfix"></div></div>
+<div class="rm_options">
+
+ 
+<?php break;
+ 
+}
+}
+?>
+ 
+<input type="hidden" name="action" value="save" />
+</form>
+<form method="post">
+<p class="submit">
+<input name="reset" type="submit" value="Reset" />
+<input type="hidden" name="action" value="reset" />
+</p>
+</form>
+ </div> 
+ 
+
+<?php
+}
+?>
+
+<?php
+add_action('admin_init', 'mytheme_add_init');
+add_action('admin_menu', 'mytheme_add_admin');
+?>
+
+<?php  
+
+// Gumby Styles
 function global_gumby_styles() {
-	wp_register_style( 'gumby_styles', get_template_directory_uri() . '/css/gumby.css');
-	wp_enqueue_style( 'gumby_styles' );
+	$file_dir = get_bloginfo( 'template_directory' );
+	wp_enqueue_style( "gumby_styles", $file_dir . "/css/gumby.css", false, "1.0", "all" );
 }
 add_action ( 'wp_enqueue_scripts', 'global_gumby_styles' );
 
 /** Loads Gumby Javascript **/
-function global_gumby_js() {
-	wp_register_script( 
-		'gumby_js', 
-		get_template_directory_uri() . '/js/libs/gumby.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js' );
+function gumby() {
+	$file_dir = get_bloginfo( 'template_directory' );
+	wp_enqueue_script( "gumby_js", $file_dir . "/js/libs/gumby.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.retina.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.fixed.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.skiplink.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.checkbox.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.radiobtn.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.tabs.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.navbar.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.fittext.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.jquery.validation.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/gumby.init.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/gumby.min.js", array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/plugins.js", array( 'jquery' ), false, true );
+	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/main.js", array( 'jquery' ), false, true );
+	
 }
-add_action( 'wp_enqueue_scripts', 'global_gumby_js' );
+add_action( 'wp_enqueue_scripts', 'gumby' );
 
-/** Loads Gumby Retina **/
-function global_gumby_js_retina() {
-	wp_register_script( 
-		'gumby_js_retina', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.retina.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_retina' );
 
-/** Loads Gumby Fixed **/
-function global_gumby_js_fixed() {
-	wp_register_script( 
-		'gumby_js_fixed', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.fixed.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_fixed' );
-
-/** Loads Gumby Skiplink **/
-function global_gumby_js_skiplink() {
-	wp_register_script( 
-		'gumby_js_skiplink', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.skiplink.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_skiplink' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_skiplink' );
-
-/** Loads Gumby Toggleswitch **/
-function global_gumby_js_toggleswitch() {
-	wp_register_script( 
-		'gumby_js_toggleswitch', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.toggleswitch.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_toggleswtich' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_toggleswitch' );
-
-/** Loads Gumby Checkbox **/
-function global_gumby_js_checkbox() {
-	wp_register_script( 
-		'gumby_js_checkbox', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.checkbox.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_checkbox' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_checkbox' );
-
-/** Loads Radiobtn **/
-function global_gumby_js_radiobtn() {
-	wp_register_script( 
-		'gumby_js_radiobtn', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.radiobtn.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_radiobtn' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_radiobtn' );
-
-/** Loads Gumby Tabs **/
-function global_gumby_js_tabs() {
-	wp_register_script( 
-		'gumby_js_tabs', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.tabs.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_tabs' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_tabs' );
-
-/** Loads Gumby navbar **/
-function global_gumby_js_navbar() {
-	wp_register_script( 
-		'gumby_js_navbar', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.navbar.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_navbar' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_navbar' );
-
-/** Loads Gumby fittext **/
-function global_gumby_js_fittext() {
-	wp_register_script( 
-		'gumby_js_fittext', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.fittext.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_fittext' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_fittext' );
-
-/** Loads Gumby jQuery validation **/
-function global_gumby_js_jquery_validation() {
-	wp_register_script( 
-		'gumby_js_jquery_validation', 
-		get_template_directory_uri() . '/js/libs/ui/gumby.jquery.validation.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_jquery_validation' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_jquery_validation' );
-
-/** Loads Gumby init **/
-function global_gumby_js_gumby_init() {
-	wp_register_script( 
-		'gumby_js_gumby_init', 
-		get_template_directory_uri() . '/js/libs/gumby.init.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_js_gumby_init' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_js_gumby_init' );
-
-/** Loads Gumby min **/
-function global_gumby_min() {
-	wp_register_script(
-		'gumby_min',
-		get_template_directory_uri() . '/js/libs/gumby.min.js',
-		array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_min' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_min' );
-
-/** Loads Gumby plugins **/
-function global_gumby_plugins() {
-	wp_register_script(
-		'gumby_plugins',
-		get_template_directory_uri() . '/js/plugins.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_plugins' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_plugins' );
-
-/** Loads gumby main **/
-function global_gumby_main() {
-	wp_register_script(
-		'gumby_main',
-		get_template_directory_uri() . '/js/main.js',
-		array( 'jquery' ),
-		false,
-		true
-	);
-	wp_enqueue_script( 'gumby_main' );
-}
-add_action( 'wp_enqueue_scripts', 'global_gumby_main' );
 
 /**
  * Set the content width based on the theme's design and stylesheet.
