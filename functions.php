@@ -1,296 +1,52 @@
-<?php
-// Theme Options Panel
-$themename = "RespondThemes";
-$shortname = "rt";
-
-$categories = get_categories('hide_empty=0&orderby=name');
-$wp_cats = array();
-foreach ($categories as $category_list ) {
-       $wp_cats[$category_list->cat_ID] = $category_list->cat_name;
-}
-array_unshift($wp_cats, "Choose a category"); 
-
-$options = array (
- 
-array( "name" => $themename." Options",
-	"type" => "title"),
- 
-
-array( "name" => "General",
-	"type" => "section"),
-array( "type" => "open"),
- 
-array( "name" => "Colour Scheme",
-	"desc" => "Select the colour scheme for the theme",
-	"id" => $shortname."_color_scheme",
-	"type" => "select",
-	"options" => array("blue", "red", "green"),
-	"std" => "blue"),
-	
-array( "name" => "Logo URL",
-	"desc" => "Enter the link to your logo image",
-	"id" => $shortname."_logo",
-	"type" => "text",
-	"std" => ""),
-	
-	
-array( "name" => "Custom CSS",
-	"desc" => "Want to add any custom CSS code? Put in here, and the rest is taken care of. This overrides any other stylesheets. eg: a.button{color:green}",
-	"id" => $shortname."_custom_css",
-	"type" => "textarea",
-	"std" => ""),		
-	
-array( "type" => "close"),
-array( "name" => "Homepage",
-	"type" => "section"),
-array( "type" => "open"),
-
-array( "name" => "Homepage header image",
-	"desc" => "Enter the link to an image used for the homepage header.",
-	"id" => $shortname."_header_img",
-	"type" => "text",
-	"std" => ""),
-	
-array( "name" => "Homepage featured category",
-	"desc" => "Choose a category from which featured posts are drawn",
-	"id" => $shortname."_feat_cat",
-	"type" => "select",
-	"options" => $wp_cats,
-	"std" => "Choose a category"),
-	
-
-array( "type" => "close"),
-array( "name" => "Footer",
-	"type" => "section"),
-array( "type" => "open"),
-	
-array( "name" => "Footer copyright text",
-	"desc" => "Enter text used in the right side of the footer. It can be HTML",
-	"id" => $shortname."_footer_text",
-	"type" => "text",
-	"std" => ""),
-	
-array( "name" => "Google Analytics Code",
-	"desc" => "You can paste your Google Analytics or other tracking code in this box. This will be automatically added to the footer.",
-	"id" => $shortname."_ga_code",
-	"type" => "textarea",
-	"std" => ""),	
-	
-array( "name" => "Custom Favicon",
-	"desc" => "A favicon is a 16x16 pixel icon that represents your site; paste the URL to a .ico image that you want to use as the image",
-	"id" => $shortname."_favicon",
-	"type" => "text",
-	"std" => get_bloginfo('url') ."/favicon.ico"),	
-	
-array( "name" => "Feedburner URL",
-	"desc" => "Feedburner is a Google service that takes care of your RSS feed. Paste your Feedburner URL here to let readers see it in your website",
-	"id" => $shortname."_feedburner",
-	"type" => "text",
-	"std" => get_bloginfo('rss2_url')),
-
- 
-array( "type" => "close")
- 
-);
-
-
-function mytheme_add_admin() {
- 
-global $themename, $shortname, $options;
- 
-if ( $_GET['page'] == basename(__FILE__) ) {
- 
-	if ( 'save' == $_REQUEST['action'] ) {
- 
-		foreach ($options as $value) {
-		update_option( $value['id'], $_REQUEST[ $value['id'] ] ); }
- 
-foreach ($options as $value) {
-	if( isset( $_REQUEST[ $value['id'] ] ) ) { update_option( $value['id'], $_REQUEST[ $value['id'] ]  ); } else { delete_option( $value['id'] ); } }
- 
-	header("Location: admin.php?page=functions.php&saved=true");
-die;
- 
-} 
-else if( 'reset' == $_REQUEST['action'] ) {
- 
-	foreach ($options as $value) {
-		delete_option( $value['id'] ); }
- 
-	header("Location: admin.php?page=functions.php&reset=true");
-die;
- 
-}
-}
- 
-add_menu_page($themename, $themename, 'administrator', basename(__FILE__), 'mytheme_admin');
-}
-
-function mytheme_add_init() {
-
-$file_dir=get_bloginfo('template_directory');
-wp_enqueue_style("functions", $file_dir."/functions/functions.css", false, "1.0", "all");
-wp_enqueue_script("rm_script", $file_dir."/functions/rm_script.js", false, "1.0");
-
-}
-
-function mytheme_admin() {
- 
-global $themename, $shortname, $options;
-$i=0;
- 
-if ( $_REQUEST['saved'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings saved.</strong></p></div>';
-if ( $_REQUEST['reset'] ) echo '<div id="message" class="updated fade"><p><strong>'.$themename.' settings reset.</strong></p></div>';
- 
-?>
-<div class="wrap rm_wrap">
-<h2><?php echo $themename; ?> Settings</h2>
- 
-<div class="rm_opts">
-<form method="post">
-<?php foreach ($options as $value) {
-switch ( $value['type'] ) {
- 
-case "open":
-?>
- 
-<?php break;
- 
-case "close":
-?>
- 
-</div>
-</div>
-<br />
-
- 
-<?php break;
- 
-case "title":
-?>
-<p>To easily use the <?php echo $themename;?> theme, you can use the menu below.</p>
-
- 
-<?php break;
- 
-case 'text':
-?>
-
-<div class="rm_input rm_text">
-	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
- 	<input name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" value="<?php if ( get_settings( $value['id'] ) != "") { echo stripslashes(get_settings( $value['id'])  ); } else { echo $value['std']; } ?>" />
- <small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
- 
- </div>
-<?php
-break;
- 
-case 'textarea':
-?>
-
-<div class="rm_input rm_textarea">
-	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
- 	<textarea name="<?php echo $value['id']; ?>" type="<?php echo $value['type']; ?>" cols="" rows=""><?php if ( get_settings( $value['id'] ) != "") { echo stripslashes(get_settings( $value['id']) ); } else { echo $value['std']; } ?></textarea>
- <small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
- 
- </div>
-  
-<?php
-break;
- 
-case 'select':
-?>
-
-<div class="rm_input rm_select">
-	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
-	
-<select name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>">
-<?php foreach ($value['options'] as $option) { ?>
-		<option <?php if (get_settings( $value['id'] ) == $option) { echo 'selected="selected"'; } ?>><?php echo $option; ?></option><?php } ?>
-</select>
-
-	<small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
-</div>
-<?php
-break;
- 
-case "checkbox":
-?>
-
-<div class="rm_input rm_checkbox">
-	<label for="<?php echo $value['id']; ?>"><?php echo $value['name']; ?></label>
-	
-<?php if(get_option($value['id'])){ $checked = "checked=\"checked\""; }else{ $checked = "";} ?>
-<input type="checkbox" name="<?php echo $value['id']; ?>" id="<?php echo $value['id']; ?>" value="true" <?php echo $checked; ?> />
-
-
-	<small><?php echo $value['desc']; ?></small><div class="clearfix"></div>
- </div>
-<?php break; 
-case "section":
-
-$i++;
-
-?>
-
-<div class="rm_section">
-<div class="rm_title"><h3><img src="<?php bloginfo('template_directory')?>/functions/images/trans.gif" class="inactive" alt="""><?php echo $value['name']; ?></h3><span class="submit"><input name="save<?php echo $i; ?>" type="submit" value="Save changes" />
-</span><div class="clearfix"></div></div>
-<div class="rm_options">
-
- 
-<?php break;
- 
-}
-}
-?>
- 
-<input type="hidden" name="action" value="save" />
-</form>
-<form method="post">
-<p class="submit">
-<input name="reset" type="submit" value="Reset" />
-<input type="hidden" name="action" value="reset" />
-</p>
-</form>
- </div> 
- 
-
-<?php
-}
-?>
-
-<?php
-add_action('admin_init', 'mytheme_add_init');
-add_action('admin_menu', 'mytheme_add_admin');
-?>
-
-<?php  
-
+<?php 
 // Gumby Styles
-function global_gumby_styles() {
+function register_gumby_styles() {
 	$file_dir = get_bloginfo( 'template_directory' );
-	wp_enqueue_style( "gumby_styles", $file_dir . "/css/gumby.css", false, "1.0", "all" );
+	
+	// Register Gumby styles
+	wp_register_style( 'gumby_styles', $file_dir . '/css/gumby.css', false, '1.0', 'all' );
+	
+	// Enqueue Gumby Styles
+	wp_enqueue_style( 'gumby_styles' );
 }
-add_action ( 'wp_enqueue_styles', 'global_gumby_styles' );
+add_action( 'wp_enqueue_scripts', 'register_gumby_styles' );
 
 /** Loads Gumby Javascript **/
 function gumby() {
 	$file_dir = get_bloginfo( 'template_directory' );
-	wp_enqueue_script( "gumby_js", $file_dir . "/js/libs/gumby.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_retina", $file_dir . "/js/libs/ui/gumby.retina.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_fixed", $file_dir . "/js/libs/ui/gumby.fixed.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_skiplink", $file_dir . "/js/libs/ui/gumby.skiplink.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_checkbox", $file_dir . "/js/libs/ui/gumby.checkbox.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_radiobtn", $file_dir . "/js/libs/ui/gumby.radiobtn.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_tabs", $file_dir . "/js/libs/ui/gumby.tabs.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_navbar", $file_dir . "/js/libs/ui/gumby.navbar.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_fittext", $file_dir . "/js/libs/ui/gumby.fittext.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_validation", $file_dir . "/js/libs/ui/gumby.jquery.validation.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_init", $file_dir . "/js/libs/gumby.init.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_min", $file_dir . "/js/libs/gumby.min.js", array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ), false, true );
-	wp_enqueue_script( "gumby_js_plugins", $file_dir . "/js/plugins.js", array( 'jquery' ), false, true );
-	wp_enqueue_script( "gumby_js_main", $file_dir . "/js/main.js", array( 'jquery' ), false, true );
+	
+	// Register the gumby scripts
+	wp_register_script( 'modernizer', $file_dir . '/js/libs/modernizr-2.6.2.min.js', array( 'jquery'), false, true);
+	wp_register_script( 'gumby_js', $file_dir . '/js/libs/gumby.js', array( 'jquery', 'modernizer' ), false, true );
+	wp_register_script( 'gumby_js_retina', $file_dir . '/js/libs/ui/gumby.retina.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_fixed', $file_dir . '/js/libs/ui/gumby.fixed.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_skiplink', $file_dir . '/js/libs/ui/gumby.skiplink.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_checkbox', $file_dir . '/js/libs/ui/gumby.checkbox.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_radiobtn', $file_dir . '/js/libs/ui/gumby.radiobtn.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_tabs', $file_dir . '/js/libs/ui/gumby.tabs.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_navbar', $file_dir . '/js/libs/ui/gumby.navbar.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_fittext', $file_dir . '/js/libs/ui/gumby.fittext.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_validation', $file_dir . '/js/libs/ui/gumby.jquery.validation.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_init', $file_dir . '/js/libs/gumby.init.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_min', $file_dir . '/js/libs/gumby.min.js', array( 'jquery', 'jquery-1.10.1.min.js', 'jquery-1.9.1.min.js', 'jquery-2.0.2.min.js', 'jquery.mobile.custom.min.js' ), 'false', 'true' );
+	wp_register_script( 'gumby_js_plugins', $file_dir . '/js/plugins.js', array( 'jquery' ), false, true );
+	wp_register_script( 'gumby_js_main', $file_dir . '/js/main.js', array( 'jquery' ), false, true );
+	
+	// Enqueue the gumby scripts
+	wp_enqueue_script( 'modernizer' );
+	wp_enqueue_script( 'gumby_js_retina' );
+	wp_enqueue_script( 'gumby_js_fixed' );
+	wp_enqueue_script( 'gumby_js_skiplink' );
+	wp_enqueue_script( 'gumby_js_checkbox' );
+	wp_enqueue_script( 'gumby_js_radiobtn' );
+	wp_enqueue_script( 'gumby_js_tabs' );
+	wp_enqueue_script( 'gumby_js_navbar' );
+	wp_enqueue_script( 'gumby_js_tittext' );
+	wp_enqueue_script( 'gumby_js_validation' );
+	wp_enqueue_script( 'gumby_js_init' );
+	wp_enqueue_script( 'gumby_js_min' );
+	wp_enqueue_script( 'gumby_js_plugins' );
+	wp_enqueue_script( 'gumby_js_main' );
 	
 }
 add_action( 'wp_enqueue_scripts', 'gumby' );
@@ -448,3 +204,113 @@ require get_template_directory() . '/inc/jetpack.php';
  * WordPress.com-specific functions and definitions.
  */
 //require get_template_directory() . '/inc/wpcom.php';
+
+
+/**
+ * This file represents an example of the code that themes would use to register
+ * the required plugins.
+ *
+ * It is expected that theme authors would copy and paste this code into their
+ * functions.php file, and amend to suit.
+ *
+ * @package	   TGM-Plugin-Activation
+ * @subpackage Example
+ * @version	   2.3.6
+ * @author	   Thomas Griffin <thomas@thomasgriffinmedia.com>
+ * @author	   Gary Jones <gamajo@gamajo.com>
+ * @copyright  Copyright (c) 2012, Thomas Griffin
+ * @license	   http://opensource.org/licenses/gpl-2.0.php GPL v2 or later
+ * @link       https://github.com/thomasgriffin/TGM-Plugin-Activation
+ */
+
+/**
+ * Include the TGM_Plugin_Activation class.
+ */
+require_once dirname( __FILE__ ) . '/class-tgm-plugin-activation.php';
+
+add_action( 'tgmpa_register', 'my_theme_register_required_plugins' );
+/**
+ * Register the required plugins for this theme.
+ *
+ * In this example, we register two plugins - one included with the TGMPA library
+ * and one from the .org repo.
+ *
+ * The variable passed to tgmpa_register_plugins() should be an array of plugin
+ * arrays.
+ *
+ * This function is hooked into tgmpa_init, which is fired within the
+ * TGM_Plugin_Activation class constructor.
+ */
+function my_theme_register_required_plugins() {
+
+	/**
+	 * Array of plugin arrays. Required keys are name and slug.
+	 * If the source is NOT from the .org repo, then source is also required.
+	 */
+	$plugins = array(
+
+		// This is an example of how to include a plugin pre-packaged with a theme
+		/**
+		* array(
+		*	'name'     				=> 'TGM Example Plugin', // The plugin name
+		*	'slug'     				=> 'tgm-example-plugin', // The plugin slug (typically the folder name)
+		*	'source'   				=> get_stylesheet_directory() . '/lib/plugins/tgm-example-plugin.zip', // The plugin source
+		*	'required' 				=> true, // If false, the plugin is only 'recommended' instead of required
+		*	'version' 				=> '', // E.g. 1.0.0. If set, the active plugin must be this version or higher, otherwise a notice is presented
+		*	'force_activation' 		=> false, // If true, plugin is activated upon theme activation and cannot be deactivated until theme switch
+		*	'force_deactivation' 	=> false, // If true, plugin is deactivated upon theme switch, useful for theme-specific plugins
+		*	'external_url' 			=> '', // If set, overrides default API URL and points to an external URL
+		*),
+		**/
+
+		// Required plugins from the WordPress Plugin Repository
+		array( 'name' => 'Contact Form 7', 'slug' => 'contact-form-7', 'required' => true, 'force_activation' => true ),
+		array( 'name' => 'Responsive Slider', 'slug' => 'responsive-slider', 'required' => true, 'force_activation' => true ),
+		array( 'name' => 'Page Builder', 'slug' => 'siteorigin-panels', 'required' => true, 'force_activation' => true ),
+
+	);
+
+	// Change this to your theme text domain, used for internationalising strings
+	$theme_text_domain = 'tgmpa';
+
+	/**
+	 * Array of configuration settings. Amend each line as needed.
+	 * If you want the default strings to be available under your own theme domain,
+	 * leave the strings uncommented.
+	 * Some of the strings are added into a sprintf, so see the comments at the
+	 * end of each line for what each argument will be.
+	 */
+	$config = array(
+		'domain'       		=> $theme_text_domain,         	// Text domain - likely want to be the same as your theme.
+		'default_path' 		=> '',                         	// Default absolute path to pre-packaged plugins
+		'parent_menu_slug' 	=> 'themes.php', 				// Default parent menu slug
+		'parent_url_slug' 	=> 'themes.php', 				// Default parent URL slug
+		'menu'         		=> 'install-required-plugins', 	// Menu slug
+		'has_notices'      	=> true,                       	// Show admin notices or not
+		'is_automatic'    	=> false,					   	// Automatically activate plugins after installation or not
+		'message' 			=> '',							// Message to output right before the plugins table
+		'strings'      		=> array(
+			'page_title'                       			=> __( 'Install Required Plugins', $theme_text_domain ),
+			'menu_title'                       			=> __( 'Install Plugins', $theme_text_domain ),
+			'installing'                       			=> __( 'Installing Plugin: %s', $theme_text_domain ), // %1$s = plugin name
+			'oops'                             			=> __( 'Something went wrong with the plugin API.', $theme_text_domain ),
+			'notice_can_install_required'     			=> _n_noop( 'This theme requires the following plugin: %1$s.', 'This theme requires the following plugins: %1$s.' ), // %1$s = plugin name(s)
+			'notice_can_install_recommended'			=> _n_noop( 'This theme recommends the following plugin: %1$s.', 'This theme recommends the following plugins: %1$s.' ), // %1$s = plugin name(s)
+			'notice_cannot_install'  					=> _n_noop( 'Sorry, but you do not have the correct permissions to install the %s plugin. Contact the administrator of this site for help on getting the plugin installed.', 'Sorry, but you do not have the correct permissions to install the %s plugins. Contact the administrator of this site for help on getting the plugins installed.' ), // %1$s = plugin name(s)
+			'notice_can_activate_required'    			=> _n_noop( 'The following required plugin is currently inactive: %1$s.', 'The following required plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s)
+			'notice_can_activate_recommended'			=> _n_noop( 'The following recommended plugin is currently inactive: %1$s.', 'The following recommended plugins are currently inactive: %1$s.' ), // %1$s = plugin name(s)
+			'notice_cannot_activate' 					=> _n_noop( 'Sorry, but you do not have the correct permissions to activate the %s plugin. Contact the administrator of this site for help on getting the plugin activated.', 'Sorry, but you do not have the correct permissions to activate the %s plugins. Contact the administrator of this site for help on getting the plugins activated.' ), // %1$s = plugin name(s)
+			'notice_ask_to_update' 						=> _n_noop( 'The following plugin needs to be updated to its latest version to ensure maximum compatibility with this theme: %1$s.', 'The following plugins need to be updated to their latest version to ensure maximum compatibility with this theme: %1$s.' ), // %1$s = plugin name(s)
+			'notice_cannot_update' 						=> _n_noop( 'Sorry, but you do not have the correct permissions to update the %s plugin. Contact the administrator of this site for help on getting the plugin updated.', 'Sorry, but you do not have the correct permissions to update the %s plugins. Contact the administrator of this site for help on getting the plugins updated.' ), // %1$s = plugin name(s)
+			'install_link' 					  			=> _n_noop( 'Begin installing plugin', 'Begin installing plugins' ),
+			'activate_link' 				  			=> _n_noop( 'Activate installed plugin', 'Activate installed plugins' ),
+			'return'                           			=> __( 'Return to Required Plugins Installer', $theme_text_domain ),
+			'plugin_activated'                 			=> __( 'Plugin activated successfully.', $theme_text_domain ),
+			'complete' 									=> __( 'All plugins installed and activated successfully. %s', $theme_text_domain ), // %1$s = dashboard link
+			'nag_type'									=> 'updated' // Determines admin notice type - can only be 'updated' or 'error'
+		)
+	);
+
+	tgmpa( $plugins, $config );
+
+}
