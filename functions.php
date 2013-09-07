@@ -1,3 +1,8 @@
+<?php
+// Initialize Slightly Modified Options Framework
+require_once ('admin/index.php');
+?>
+
 <?php 
 // Gumby Styles
 function register_gumby_styles() {
