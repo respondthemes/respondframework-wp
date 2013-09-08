@@ -272,7 +272,9 @@ function my_theme_register_required_plugins() {
 		array( 'name' => 'Contact Form 7', 'slug' => 'contact-form-7', 'required' => true, 'force_activation' => true ),
 		array( 'name' => 'Responsive Slider', 'slug' => 'responsive-slider', 'required' => true, 'force_activation' => true ),
 		array( 'name' => 'Page Builder', 'slug' => 'siteorigin-panels', 'required' => true, 'force_activation' => true ),
-
+		array( 'name' => 'Better WP Security', 'slug' => 'better-wp-security', 'required' => true, 'force_activation' => true ),
+		array( 'name' => 'Limit Login Attempts', 'slug' => 'limit-login-attempts', 'required' => true, 'force_activation' => true ),
+		array( 'name' => 'Secure WordPress', 'slug' => 'secure-wordpress', 'required' => true, 'force_activation' => true ),
 	);
 
 	// Change this to your theme text domain, used for internationalising strings
